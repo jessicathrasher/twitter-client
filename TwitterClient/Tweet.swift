@@ -18,6 +18,9 @@ class Tweet: NSObject {
     var name: String?
     var username: String?
     var profileImageURL: URL?
+    var tweetId: String?
+    var retweetString: String?
+    
     
     init(dictionary: [String: Any]) {
         
@@ -48,6 +51,16 @@ class Tweet: NSObject {
         name = userInfo["name"] as? String
         
         username = "@\(userInfo["screen_name"] as? String ?? "")"
+        
+        tweetId = dictionary["id_str"] as? String
+        
+        if let retweeted = dictionary["retweeted_status"] as? [String: Any] {
+        
+            let name = retweeted["in_reply_to_screen_name"] as! String
+            
+            retweetString = name + " retweeted"
+            
+        }
     }
     
     class func tweetsWithArray(dictionaries: [[String: Any]]) -> [Tweet] {

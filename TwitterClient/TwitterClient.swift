@@ -80,8 +80,6 @@ class TwitterClient: BDBOAuth1SessionManager {
             failure(error!)
         })
         
-        
-        
     }
     
     
@@ -102,4 +100,61 @@ class TwitterClient: BDBOAuth1SessionManager {
         
     }
     
+    func retweet(tweetId: String, success: @escaping (Tweet) -> (), failure: @escaping (Error) -> ()) {
+        
+        post("1.1/statuses/retweet/\(tweetId).json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) -> Void in
+            print("retweet: \(response.debugDescription)")
+            
+            let tweetDictionary = response as! [String: Any]
+            let tweet = Tweet(dictionary: tweetDictionary)
+            
+            success(tweet)
+            
+        }, failure: { (task: URLSessionDataTask?, error: Error?) -> Void in
+            print("error: \(error!.localizedDescription)")
+            failure(error!)
+        })
+        
+    }
+    
+    func favorite(tweetId: String, success: @escaping (Tweet) -> (), failure: @escaping (Error) -> ()) {
+        
+        post("1.1/favorites/create.json?id=\(tweetId)", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) -> Void in
+            print("favorite: \(response.debugDescription)")
+            
+            let tweetDictionary = response as! [String: Any]
+            let tweet = Tweet(dictionary: tweetDictionary)
+            
+            success(tweet)
+            
+        }, failure: { (task: URLSessionDataTask?, error: Error?) -> Void in
+            print("error: \(error!.localizedDescription)")
+            failure(error!)
+        })
+        
+    }
+    
+    func post(status: String, replyId: String?, success: @escaping (Tweet) -> (), failure: @escaping (Error) -> ()) {
+
+        let encodedStatus = status.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        
+        var url = "1.1/statuses/update.json?status=\(encodedStatus!)"
+        
+        if let replyId = replyId {
+            url = url + "&in_reply_to_status_id=\(replyId)"
+        }
+        
+        post(url, parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) -> Void in
+            print("tweet: \(response.debugDescription)")
+
+            let tweetDictionary = response as! [String: Any]
+            let tweet = Tweet(dictionary: tweetDictionary)
+            
+            success(tweet)
+            
+        }, failure: { (task: URLSessionDataTask?, error: Error?) -> Void in
+            print("error: \(error!.localizedDescription)")
+            failure(error!)
+        })
+    }
 }

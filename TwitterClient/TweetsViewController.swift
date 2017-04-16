@@ -76,6 +76,17 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         cell.timeLabel.text = tweet.timeSince
         
+        cell.tweetId = tweet.tweetId
+        
+        if let retweetedString = tweet.retweetString {
+            cell.retweetedByLabel.text = retweetedString
+            cell.retweetedByLabel.isHidden = false
+            cell.retweetedButton.isHidden = false
+        } else {
+            cell.retweetedByLabel.isHidden = true
+            cell.retweetedButton.isHidden = true
+        }
+        
         return cell
     }
 
@@ -89,8 +100,10 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 
+    @IBAction func onReplyButton(_ sender: Any) {
+        self.performSegue(withIdentifier: "postSegue", sender: nil)
+    }
     
     // MARK: - Navigation
 
@@ -98,6 +111,15 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        
+        // Reply button is sending us to Post
+        // If we're going totest post from here, set this as the reply tweet
+        if let nc = segue.destination as? UINavigationController {
+        
+            let vc = nc.viewControllers[0] as? PostViewController
+            //TODO vc.replyTweetId = tweet.tweetId
+        }
+        
         
         if let cell = sender as? TweetCell {
         
