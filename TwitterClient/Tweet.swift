@@ -56,9 +56,10 @@ class Tweet: NSObject {
         
         if let retweeted = dictionary["retweeted_status"] as? [String: Any] {
         
-            let name = retweeted["in_reply_to_screen_name"] as! String
+            if let name = retweeted["in_reply_to_screen_name"] as? String {
             
-            retweetString = name + " retweeted"
+                retweetString = name + " retweeted"
+            }
             
         }
     }

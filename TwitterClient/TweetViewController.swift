@@ -19,6 +19,8 @@ class TweetViewController: UIViewController {
     @IBOutlet weak var timestampLabel: UILabel!
     @IBOutlet weak var numRetweetsLabel: UILabel!
     @IBOutlet weak var numFavoritesLabel: UILabel!
+    @IBOutlet weak var retweetedByButton: UIButton!
+    @IBOutlet weak var retweetedByLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +33,12 @@ class TweetViewController: UIViewController {
         
         if let url = tweet.profileImageURL {
             profileImageView.setImageWith(url)
+        }
+        
+        if tweet.retweetString != nil {
+            retweetedByLabel.text = tweet.retweetString
+            retweetedByLabel.isHidden = false
+            retweetedByButton.isHidden = false
         }
         
         timestampLabel.text = tweet.timeSince

@@ -8,18 +8,20 @@
 
 import UIKit
 
-class PostViewController: UIViewController {
+class PostViewController: UIViewController, UITextViewDelegate {
 
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var profileImageView: UIImageView!
-    @IBOutlet weak var tweetTextField: UITextField!
+    @IBOutlet weak var tweetTextView: UITextView!
     
     var replyTweetId: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        tweetTextView.delegate = self
+        
         let user = User.currentUser!
         
         nameLabel.text = user.name
@@ -32,7 +34,7 @@ class PostViewController: UIViewController {
         profileImageView.layer.cornerRadius = 4
         profileImageView.clipsToBounds = true
         
-        tweetTextField.becomeFirstResponder()
+        tweetTextView.becomeFirstResponder()
         
         // Do any additional setup after loading the view.
     }
@@ -48,7 +50,7 @@ class PostViewController: UIViewController {
 
     @IBAction func onTweetButton(_ sender: Any) {
         
-        if let status = tweetTextField.text {
+        if let status = tweetTextView.text {
             TwitterClient.sharedInstance?.post(status: status, replyId: replyTweetId, success: { (tweet: Tweet) in
                 print("posted")
             }, failure: { (error: Error) in
@@ -59,15 +61,24 @@ class PostViewController: UIViewController {
         }
     }
     
+    func textViewDidChange(_ textView: UITextView) {
+        
+        if (textView.text.characters.count == 140) {
+            //
+        }
+        
+    }
     
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        
+        if let vc = segue.destination as? TweetsViewController {
+            vc.tableView.reloadData()
+        }
     }
-    */
-
+    
 }

@@ -23,9 +23,6 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        //self.tableView.estimatedRowHeight = 250
-        //self.tableView.rowHeight = UITableViewAutomaticDimension
-        
         
         TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets: [Tweet]) -> () in
             self.tweets = tweets
@@ -36,6 +33,17 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             print(error.localizedDescription)
         })
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets: [Tweet]) -> () in
+            self.tweets = tweets
+            
+            self.tableView.reloadData()
+            
+        }, failure: { (error: Error) -> () in
+            print(error.localizedDescription)
+        })
     }
     
     func loadTweets(_ refreshControl: UIRefreshControl) {
@@ -87,6 +95,8 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             cell.retweetedButton.isHidden = true
         }
         
+        cell.replyButton.tag = indexPath.row
+        
         return cell
     }
 
@@ -102,7 +112,11 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
 
     @IBAction func onReplyButton(_ sender: Any) {
-        self.performSegue(withIdentifier: "postSegue", sender: nil)
+        
+        let sender = sender as AnyObject
+        print(sender.tag)
+        
+        self.performSegue(withIdentifier: "postSegue", sender: sender)
     }
     
     // MARK: - Navigation
@@ -114,10 +128,13 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         // Reply button is sending us to Post
         // If we're going totest post from here, set this as the reply tweet
-        if let nc = segue.destination as? UINavigationController {
-        
-            let vc = nc.viewControllers[0] as? PostViewController
-            //TODO vc.replyTweetId = tweet.tweetId
+        if let sender = sender as? UIButton {
+            if let nc = segue.destination as? UINavigationController {
+                let tweet = tweets[sender.tag]
+            
+                let vc = nc.viewControllers[0] as? PostViewController
+                vc?.replyTweetId = tweet.tweetId
+            }
         }
         
         
