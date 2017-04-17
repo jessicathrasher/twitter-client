@@ -183,9 +183,11 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="favoriteButton" destination="r7g-bQ-cW3" id="XVS-sQ-CyX"/>
                                             <outlet property="nameLabel" destination="Lrz-TN-vgc" id="5qV-4q-jlE"/>
                                             <outlet property="profileImageView" destination="vGn-Tn-TqB" id="CNZ-PU-rBF"/>
                                             <outlet property="replyButton" destination="kOp-5o-IR6" id="ebA-vX-RqH"/>
+                                            <outlet property="retweetButton" destination="a1r-aK-1f9" id="sFN-bR-b26"/>
                                             <outlet property="retweetedButton" destination="BQd-5c-VJl" id="tWL-iF-rv6"/>
                                             <outlet property="retweetedByLabel" destination="BoF-Ec-pRc" id="lQc-Gh-QXq"/>
                                             <outlet property="timeLabel" destination="a9s-EK-U8D" id="0lZ-t4-qit"/>
@@ -207,11 +209,13 @@
                     </view>
                     <navigationItem key="navigationItem" title="Tweets" id="NaA-Gq-aqu">
                         <barButtonItem key="leftBarButtonItem" title="Logout" id="r5i-xJ-IKe">
+                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="onLogoutButton:" destination="c6O-TN-RgJ" id="khc-3i-Duj"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Post" id="wLA-za-43v">
+                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <segue destination="q6S-j4-wiu" kind="presentation" identifier="postSegue" id="kYa-7i-3qg"/>
                             </connections>
@@ -411,10 +415,12 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="likeButton" destination="gdD-i2-H0N" id="ysj-Ao-fxQ"/>
                         <outlet property="nameLabel" destination="p2x-mf-1BE" id="K4Q-PA-lC6"/>
                         <outlet property="numFavoritesLabel" destination="866-Px-DiP" id="Nm2-ja-lJb"/>
                         <outlet property="numRetweetsLabel" destination="pCO-bn-eh8" id="vWF-2Y-ryf"/>
                         <outlet property="profileImageView" destination="wte-Rq-R7D" id="jzq-2F-7NH"/>
+                        <outlet property="retweetButton" destination="xZJ-CW-0wH" id="zHH-yk-Hys"/>
                         <outlet property="retweetedByButton" destination="QHh-Vv-Mfd" id="IIY-yu-0gv"/>
                         <outlet property="retweetedByLabel" destination="OPC-mG-f7E" id="GVr-2F-4P5"/>
                         <outlet property="timestampLabel" destination="Zfh-hy-380" id="kPU-KL-Vfq"/>
@@ -482,11 +488,13 @@
                     </view>
                     <navigationItem key="navigationItem" id="OAs-hd-UK8">
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="rdS-hK-Rbs">
+                            <color key="tintColor" red="0.31994250419999998" green="0.84137207270000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <action selector="onCancelButton:" destination="U8n-RY-9rZ" id="sgv-Ua-fJd"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Tweet" id="5tt-ym-mrX">
+                            <color key="tintColor" red="0.31994250419999998" green="0.84137207270000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <action selector="onTweetButton:" destination="U8n-RY-9rZ" id="M51-sO-IIf"/>
                             </connections>
@@ -508,9 +516,10 @@
             <objects>
                 <navigationController storyboardIdentifier="TweetsNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="wTt-4A-J7e" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="6ef-zX-y7K">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="6ef-zX-y7K">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.31994250416755676" green="0.84137207269668579" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -526,9 +535,10 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="q6S-j4-wiu" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Gdy-Ds-LdM">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Gdy-Ds-LdM">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>

@@ -18,12 +18,18 @@ class TweetCell: UITableViewCell {
     @IBOutlet weak var retweetedByLabel: UILabel!
     @IBOutlet weak var retweetedButton: UIButton!
     @IBOutlet weak var replyButton: UIButton!
+    @IBOutlet weak var retweetButton: UIButton!
+    @IBOutlet weak var favoriteButton: UIButton!
     
     var tweetId: String!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        // Helping clear for resuse
+        retweetButton.imageView?.image = UIImage(named: "retweet-action")
+        favoriteButton.imageView?.image = UIImage(named: "like-action-1")
         
         retweetedButton.isEnabled = false
         

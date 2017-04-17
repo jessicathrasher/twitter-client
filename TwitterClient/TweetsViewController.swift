@@ -11,49 +11,37 @@ import UIKit
 class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     var tweets: [Tweet]!
+    let refreshControl = UIRefreshControl()
     
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(self.loadTweets(_:)), for: UIControlEvents.valueChanged)
+        self.refreshControl.addTarget(self, action: #selector(self.loadTweets(_:)), for: UIControlEvents.valueChanged)
         self.tableView.insertSubview(refreshControl, at: 0)
         
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
-        TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets: [Tweet]) -> () in
-            self.tweets = tweets
-            
-            self.tableView.reloadData()
-            
-        }, failure: { (error: Error) -> () in
-            print(error.localizedDescription)
-        })
-        
+        loadTweets()
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets: [Tweet]) -> () in
-            self.tweets = tweets
-            
-            self.tableView.reloadData()
-            
-        }, failure: { (error: Error) -> () in
-            print(error.localizedDescription)
-        })
+        loadTweets()
     }
     
     func loadTweets(_ refreshControl: UIRefreshControl) {
-        
+        loadTweets()
+    }
+    
+    func loadTweets() {
         TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets: [Tweet]) -> () in
             self.tweets = tweets
             
             self.tableView.reloadData()
             
-            refreshControl.endRefreshing()
+            self.refreshControl.endRefreshing()
             
         }, failure: { (error: Error) -> () in
             print(error.localizedDescription)
@@ -95,15 +83,14 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             cell.retweetedButton.isHidden = true
         }
         
+        // Add tag to find row when clicking on a button inside cell
         cell.replyButton.tag = indexPath.row
         
         return cell
     }
 
     @IBAction func onLogoutButton(_ sender: Any) {
-        
         TwitterClient.sharedInstance?.logout()
-        
     }
     
     override func didReceiveMemoryWarning() {
@@ -112,9 +99,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
 
     @IBAction func onReplyButton(_ sender: Any) {
-        
         let sender = sender as AnyObject
-        print(sender.tag)
         
         self.performSegue(withIdentifier: "postSegue", sender: sender)
     }
@@ -137,7 +122,6 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
         }
         
-        
         if let cell = sender as? TweetCell {
         
             let indexPath = tableView.indexPath(for: cell)
@@ -147,6 +131,5 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             let tweetViewController = segue.destination as! TweetViewController
             tweetViewController.tweet = tweet
         }
-        
     }
 }

@@ -21,6 +21,8 @@ class TweetViewController: UIViewController {
     @IBOutlet weak var numFavoritesLabel: UILabel!
     @IBOutlet weak var retweetedByButton: UIButton!
     @IBOutlet weak var retweetedByLabel: UILabel!
+    @IBOutlet weak var retweetButton: UIButton!
+    @IBOutlet weak var likeButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +41,14 @@ class TweetViewController: UIViewController {
             retweetedByLabel.text = tweet.retweetString
             retweetedByLabel.isHidden = false
             retweetedByButton.isHidden = false
+        }
+        
+        if tweet.favorited! {
+            likeButton.imageView?.image = UIImage(named: "like-action-on-1")
+        }
+        
+        if tweet.retweeted! {
+            retweetButton.imageView?.image = UIImage(named: "retweet-action-on")
         }
         
         timestampLabel.text = tweet.timeSince
@@ -86,9 +96,5 @@ class TweetViewController: UIViewController {
         
         let vc = nc.viewControllers[0] as! PostViewController
         vc.replyTweetId = tweet.tweetId
-        
-        
     }
-    
-
 }

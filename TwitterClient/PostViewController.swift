@@ -61,24 +61,9 @@ class PostViewController: UIViewController, UITextViewDelegate {
         }
     }
     
-    func textViewDidChange(_ textView: UITextView) {
-        
-        if (textView.text.characters.count == 140) {
-            //
-        }
-        
-    }
-    
-    // MARK: - Navigation
+//    func textViewDidChange(_ textView: UITextView) {
+//        
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-        
-        if let vc = segue.destination as? TweetsViewController {
-            vc.tableView.reloadData()
-        }
-    }
-    
+//        
+//    }
 }
