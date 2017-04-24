@@ -13,6 +13,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var tweets: [Tweet]!
     let refreshControl = UIRefreshControl()
     var isMentionsView = false
+    var menuViewController: MenuViewController!
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -124,7 +125,9 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func onProfileImageTap(_ sender: UITapGestureRecognizer) {
-        self.performSegue(withIdentifier: "profileSegue", sender: sender)
+        let tappedView = sender.view
+        let tweet = tweets[(tappedView?.tag)!]
+        menuViewController.updateContentView(username: tweet.username!)
     }
     
     // MARK: - Navigation
@@ -142,17 +145,6 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
                 let vc = nc.viewControllers[0] as? PostViewController
                 vc?.replyTweetId = tweet.tweetId
-            }
-        }
-        
-        if let sender = sender as? UITapGestureRecognizer {
-            let tappedView = sender.view
-            let tweet = tweets[(tappedView?.tag)!]
-            
-            if let profileNavigationController = segue.destination as? UINavigationController {
-                
-                let pvc = profileNavigationController.viewControllers[0] as! ProfileViewController
-                pvc.screenName = tweet.username
             }
         }
         

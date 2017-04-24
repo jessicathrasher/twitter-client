@@ -35,6 +35,9 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         profileNavigationController = storyboard.instantiateViewController(withIdentifier: "ProfileNavigationController")
         mentionsNavigationController = storyboard.instantiateViewController(withIdentifier: "TweetsNavigationController")
         
+        let tweetsViewController = tweetsNavigationController.childViewControllers.first as! TweetsViewController
+        tweetsViewController.menuViewController = self
+        
         viewControllers.append(tweetsNavigationController)
         viewControllers.append(profileNavigationController)
         viewControllers.append(mentionsNavigationController)
@@ -45,6 +48,15 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func updateContentView(username: String) {
+        
+        let profileViewController = profileNavigationController.childViewControllers.first as! ProfileViewController
+        profileViewController.screenName = username
+        profileViewController.viewDidLoad()
+        
+        hamburgerViewController.contentViewController = profileNavigationController
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -82,9 +94,9 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
-        
-        if let profileViewController = segue.destination as? ProfileViewController {
-            profileViewController.user = User.currentUser
-        }
+//        
+//        if let profileViewController = segue.destination as? ProfileViewController {
+//            profileViewController.user = User.currentUser
+//        }
     }
 }

@@ -32,9 +32,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             setUpUser()
         } else {
             TwitterClient.sharedInstance?.getUserProfile(screenname: screenName, success: { (user: User) in
-                
-                print("user is ", user.screenname!)
                 self.user = user
+                self.screenName = user.screenname
                 self.setUpUser()
             }, failure: { (error: Error) in
                 print("error \(error.localizedDescription)")
