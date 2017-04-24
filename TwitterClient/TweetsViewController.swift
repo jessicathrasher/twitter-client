@@ -12,6 +12,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     var tweets: [Tweet]!
     let refreshControl = UIRefreshControl()
+    var isMentionsView = false
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -36,16 +37,30 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func loadTweets() {
-        TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets: [Tweet]) -> () in
-            self.tweets = tweets
-            
-            self.tableView.reloadData()
-            
-            self.refreshControl.endRefreshing()
-            
-        }, failure: { (error: Error) -> () in
-            print(error.localizedDescription)
-        })
+        
+        if (isMentionsView) {
+            TwitterClient.sharedInstance?.mentionsList(success: { (tweets: [Tweet]) -> () in
+                self.tweets = tweets
+                
+                self.tableView.reloadData()
+                
+                self.refreshControl.endRefreshing()
+                
+            }, failure: { (error: Error) -> () in
+                print(error.localizedDescription)
+            })
+        } else {
+            TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets: [Tweet]) -> () in
+                self.tweets = tweets
+                
+                self.tableView.reloadData()
+                
+                self.refreshControl.endRefreshing()
+                
+            }, failure: { (error: Error) -> () in
+                print(error.localizedDescription)
+            })
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -83,8 +98,13 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             cell.retweetedButton.isHidden = true
         }
         
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.onProfileImageTap))
+        cell.profileImageView.addGestureRecognizer(tap)
+        cell.profileImageView.isUserInteractionEnabled = true
+        
         // Add tag to find row when clicking on a button inside cell
         cell.replyButton.tag = indexPath.row
+        cell.profileImageView.tag = indexPath.row
         
         return cell
     }
@@ -100,8 +120,11 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     @IBAction func onReplyButton(_ sender: Any) {
         let sender = sender as AnyObject
-        
         self.performSegue(withIdentifier: "postSegue", sender: sender)
+    }
+    
+    func onProfileImageTap(_ sender: UITapGestureRecognizer) {
+        self.performSegue(withIdentifier: "profileSegue", sender: sender)
     }
     
     // MARK: - Navigation
@@ -122,14 +145,26 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
         }
         
+        if let sender = sender as? UITapGestureRecognizer {
+            let tappedView = sender.view
+            let tweet = tweets[(tappedView?.tag)!]
+            
+            if let profileNavigationController = segue.destination as? UINavigationController {
+                
+                let pvc = profileNavigationController.viewControllers[0] as! ProfileViewController
+                pvc.screenName = tweet.username
+            }
+        }
+        
         if let cell = sender as? TweetCell {
         
             let indexPath = tableView.indexPath(for: cell)
             
             let tweet = tweets[(indexPath?.row)!]
             
-            let tweetViewController = segue.destination as! TweetViewController
-            tweetViewController.tweet = tweet
+            if let tweetViewController = segue.destination as? TweetViewController {
+                tweetViewController.tweet = tweet
+            }
         }
     }
 }

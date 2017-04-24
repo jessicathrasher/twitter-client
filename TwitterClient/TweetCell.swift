@@ -43,6 +43,10 @@ class TweetCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    func tappedProfileImage() {
+        
+    }
+    
     @IBAction func onRetweetButton(_ sender: Any) {
         TwitterClient.sharedInstance?.retweet(tweetId: tweetId, success: { (tweet: Tweet) in
             print("retweeted")

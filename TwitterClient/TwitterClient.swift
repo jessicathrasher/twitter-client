@@ -62,11 +62,29 @@ class TwitterClient: BDBOAuth1SessionManager {
             self.loginFailure?(failure)
         }
     }
-    
-    func homeTimeLine(success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
+
+    func usersList(screenName: String, success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
         
-        get("1.1/statuses/home_timeline.json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) -> Void in
-            print("timeline: \(response.debugDescription)")
+        get("1.1/statuses/user_timeline.json?screen_name=\(screenName)", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) -> Void in
+            //print("user tweets: \(response.debugDescription)")
+            
+            let dictionary = response as! [[String: Any]]
+            
+            let tweets = Tweet.tweetsWithArray(dictionaries: dictionary)
+            
+            success(tweets)
+            
+        }, failure: { (task: URLSessionDataTask?, error: Error?) -> Void in
+            print("error: \(error!.localizedDescription)")
+            
+            failure(error!)
+        })
+    }
+    
+    func mentionsList(success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
+        
+        get("1.1/statuses/mentions_timeline.json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) -> Void in
+            //print("mentions: \(response.debugDescription)")
             
             let dictionary = response as! [[String: Any]]
             
@@ -82,11 +100,45 @@ class TwitterClient: BDBOAuth1SessionManager {
         
     }
     
+    func homeTimeLine(success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
+        
+        get("1.1/statuses/home_timeline.json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) -> Void in
+            //print("timeline: \(response.debugDescription)")
+            
+            let dictionary = response as! [[String: Any]]
+            
+            let tweets = Tweet.tweetsWithArray(dictionaries: dictionary)
+            
+            success(tweets)
+            
+        }, failure: { (task: URLSessionDataTask?, error: Error?) -> Void in
+            print("error: \(error!.localizedDescription)")
+            
+            failure(error!)
+        })
+        
+    }
+    
+    func getUserProfile(screenname: String, success: @escaping (User) -> (), failure: @escaping (Error) -> ()) {
+        
+        get("1.1/users/show.json?screen_name=\(screenname)", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) -> Void in
+            //print("account: \(response.debugDescription)")
+            
+            let userDictionary = response as! [String: Any]
+            let user = User(dictionary: userDictionary)
+            
+            success(user)
+            
+        }, failure: { (task: URLSessionDataTask?, error: Error?) -> Void in
+            print("error: \(error!.localizedDescription)")
+            failure(error!)
+        })
+    }
     
     func currentAccount(success: @escaping (User) -> (), failure: @escaping (Error) -> ()) {
         
         get("1.1/account/verify_credentials.json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) -> Void in
-            print("account: \(response.debugDescription)")
+            //print("account: \(response.debugDescription)")
             
             let userDictionary = response as! [String: Any]
             let user = User(dictionary: userDictionary)
@@ -145,7 +197,7 @@ class TwitterClient: BDBOAuth1SessionManager {
         }
         
         post(url, parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) -> Void in
-            print("tweet: \(response.debugDescription)")
+            //print("tweet: \(response.debugDescription)")
 
             let tweetDictionary = response as! [String: Any]
             let tweet = Tweet(dictionary: tweetDictionary)
